@@ -11,7 +11,7 @@ def ft_garden_data() -> None:
     rose = Plant("Rose", 25, 30)
     sunflower = Plant("Sunflower", 80, 45)
     cactus = Plant("Cactus", 15, 120)
-    garden = [rose, sunflower, cactus]
+    garden: list = [rose, sunflower, cactus]
     for i in range(3):
         print(
             f"{garden[i].plant_name}: {garden[i].plant_height}cm, "
