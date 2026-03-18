@@ -37,8 +37,8 @@ def ft_garden_security() -> None:
     rose = SecurePlant("Rose", 25, 30)
     rose.set_height(-5)
     print("\n")
-    print(f"Current plant: {rose.name} ({rose.get_height()}cm, {rose.get_age()} "
-          "days)")
+    print(f"Current plant: {rose.name} ({rose.get_height()}cm, "
+          f"{rose.get_age()} days)")
 
 
 if __name__ == "__main__":
