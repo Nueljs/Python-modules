@@ -14,7 +14,7 @@ class Plant:
         self.plant_age += 1
         self.grow()
 
-    def get_info(self) -> None: 
+    def get_info(self) -> None:
         print(
             f"{self.plant_name}: "
             f"{self.plant_height}cm, {self.plant_age} days old"
