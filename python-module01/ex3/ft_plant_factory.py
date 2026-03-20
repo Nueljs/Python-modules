@@ -1,15 +1,15 @@
 #!/usr/bin/env/ python3
 
 class Plant:
-    def __init__(self, name: str, starting_height: int,
+    def __init__(self, name: str, starting_height: float,
                  starting_age: int) -> None:
         self.name: str = name
-        self.starting_height: int = starting_height
+        self.starting_height: float = starting_height
         self.starting_age: int = starting_age
 
     def get_info(self) -> str:
-        return (f"{self.name} ({self.starting_height}cm,"
-                f" {self.starting_age} days)")
+        return (f"{self.name}: {round(self.starting_height):.1f}cm,"
+                f" {self.starting_age} days old")
 
 
 def ft_plant_factory() -> None:
@@ -17,17 +17,16 @@ def ft_plant_factory() -> None:
         ["Rose", 25, 30],
         ["Oak", 200, 365],
         ["Cactus", 5, 90],
-        ["Sunflower", 280, 45],
+        ["Sunflower", 80, 45],
         ["Fern", 15, 120]
     ]
     garden: list = []
-    for i in range(5):
-        garden.append(Plant(*plants_data[i]))
-    for i in range(5):
-        print(f"Created: {garden[i].get_info()}")
-    print("\n")
-    print(f"Total plants created: {i + 1}")
+    for plant in plants_data:
+        garden.append(Plant(*plant))
+    for plant in garden:
+        print(f"Created: {plant.get_info()}")
 
 
 if __name__ == "__main__":
+    print("=== Plant Factory Output ===")
     ft_plant_factory()
