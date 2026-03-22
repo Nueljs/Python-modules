@@ -7,8 +7,7 @@ class Plant:
         self._age: int = age
 
     def show(self) -> None:
-        type: str = self.__class__.__name__
-        print(f"{self.name} ({type}): {self.height}cm, {self._age} days")
+        print(f"{self.name}: {self.height:.1f}cm, {self._age} days old")
 
 
 class Flower(Plant):
@@ -17,22 +16,18 @@ class Flower(Plant):
         self.color: str = color
         self.is_blooming: bool = False
 
-    def bloom(self) -> str:
+    def bloom(self) -> None:
         self.is_blooming = True
-        return (f"{self.name} is blooming beautifully!")
 
     def show(self) -> None:
         if not self.is_blooming:
-            print(f"{self.name}: {self.height:.1f}cm, {self._age} days old\n"
-                  f"Color: {self.color}")
-            print("Rose has not bloomed yet")
-            print("[asking the rose to bloom]")
-            self.bloom()
-            self.show()
+            super().show()
+            print(f" Color: {self.color}")
+            print(" Rose has not bloomed yet")
         elif self.is_blooming:
-            print(f"{self.name}: {self.height:.1f}cm, {self._age} days old\n"
-                  f"Color: {self.color}\n"
-                  f"{self.name} is bloomign beautifully!")
+            super().show()
+            print(f" Color: {self.color}\n"
+                  f" {self.name} is bloomign beautifully!")
 
 
 class Tree(Plant):
@@ -41,15 +36,13 @@ class Tree(Plant):
         super().__init__(name, height, age)
         self.trunk_diameter: int = trunk_diameter
 
-    def produce_shade(self) -> str:
-        return (f"[asking the {self.name} to produce shade]\n"
-                f"{self.__class__.__name__} {self.name} now produces a shade"
-                " of 200.0cm long and 5.0cm wide.\n")
+    def produce_shade(self) -> None:
+        print(f"{self.__class__.__name__} {self.name} now produces a shade"
+              " of 200.0cm long and 5.0cm wide.")
 
     def show(self) -> None:
-        print(f"{self.name}: {self.height:.1f}cm, {self._age} days old\n"
-              f" Trunk diameter: {self.trunk_diameter:.1f}cm")
-        print(self.produce_shade())
+        super().show()
+        print(f" Trunk diameter: {self.trunk_diameter:.1f}cm")
 
 
 class Vegetable(Plant):
@@ -57,31 +50,38 @@ class Vegetable(Plant):
                  nutritional_value: int) -> None:
         super().__init__(name, height, age)
         self.harvest_season: str = harvest_season
-        self.nutritional_value: int = 0
+        self.nutritional_value: int = nutritional_value
 
-    def age(self) -> None:
-        pass
-
-    def grow(self) -> None:
-        pass
+    def grow_and_age(self, days: int) -> None:
+        print(f"[make {self.name} grow and age for {days} days]")
+        for _ in range(days):
+            self._age += 1
+            self.height += 2.1
+            self.nutritional_value += 1
 
     def show(self) -> None:
-        print(f"{super().show()}\n"
-              f" Harvest season: {self.harvest_season}\n"
-              f" Nutrtional value: {self.nutritional_value}"
-              f"{self.name} is rich in {self.nutritional_value}")
-        print(f"[make {self.name} grow and age for 20 days]")
+        super().show()
+        print(f" Harvest season: {self.harvest_season}")
+        print(f" Nutritional value: {self.nutritional_value}")
 
 
 def ft_plant_types() -> None:
     rose = Flower("Rose", 15, 10, "red")
     oak = Tree("Oak", 200, 365, 5)
     tomato = Vegetable("Tomato", 5, 10, "April", 0)
-    plants: list = [rose, oak, tomato]
-    for plant in plants:
-        print(f"=== {plant.__class__.__name__}")
-        plant.show()
-        print("\n")
+    print(f"=== {rose.__class__.__name__}")
+    rose.show()
+    print("[asking the rose to bloom]")
+    rose.bloom()
+    rose.show()
+    print(f"\n=== {oak.__class__.__name__}")
+    oak.show()
+    print(f"[asking the {oak.name} to produce shade]")
+    oak.produce_shade()
+    print(f"\n=== {tomato.__class__.__name__}")
+    tomato.show()
+    tomato.grow_and_age(20)
+    tomato.show()
 
 
 if __name__ == "__main__":
