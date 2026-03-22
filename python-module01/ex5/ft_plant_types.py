@@ -1,9 +1,9 @@
 #!/usr/bin/env/ python3
 
 class Plant:
-    def __init__(self, name: str, height: int, age: int) -> None:
+    def __init__(self, name: str, height: float, age: int) -> None:
         self.name: str = name
-        self.height: int = height
+        self.height: float = height
         self._age: int = age
 
     def show(self) -> None:
@@ -27,7 +27,7 @@ class Flower(Plant):
         elif self.is_blooming:
             super().show()
             print(f" Color: {self.color}\n"
-                  f" {self.name} is bloomign beautifully!")
+                  f" {self.name} is blooming beautifully!")
 
 
 class Tree(Plant):
