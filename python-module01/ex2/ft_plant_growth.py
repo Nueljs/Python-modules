@@ -31,7 +31,7 @@ def ft_plant_growth() -> None:
         rose.get_info()
         rose.age()
 
-    print(f"Growth this week: +{round(rose.rhythm * 7)}cm")
+    print(f"Growth this week: {round(rose.rhythm * 7)}cm")
 
 
 if __name__ == "__main__":
