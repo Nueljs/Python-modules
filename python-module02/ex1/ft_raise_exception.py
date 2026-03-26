@@ -1,4 +1,4 @@
-def input_temperature(tem_strp: str) -> int:
+def input_temperature(tem_strp: str) -> None:
     try:
         temp: int = int(tem_strp)
         if temp < 0:
@@ -6,7 +6,7 @@ def input_temperature(tem_strp: str) -> int:
         elif temp > 40:
             raise (ValueError(f"{temp}ºC is too hot for plants (max 40º)"))
         else:
-            return (print(f"Temperature is now {temp}ºC"))
+            print(f"Temperature is now {temp}ºC")
     except ValueError as e:
         print(f"Caught input_temperature error: {e}")
 

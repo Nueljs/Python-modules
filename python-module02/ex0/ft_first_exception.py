@@ -1,6 +1,6 @@
-def input_temperature(tem_strp: str) -> int:
+def input_temperature(tem_strp: str) -> None:
     temp: int = int(tem_strp)
-    return (print(f"Temperature is now {temp}ºC"))
+    print(f"Temperature is now {temp}ºC")
 
 
 def test_temperature() -> None:
