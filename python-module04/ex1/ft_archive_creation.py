@@ -1,23 +1,40 @@
+import sys
+import typing
+
+
 def ft_archive_creation() -> None:
+    argc: int = len(sys.argv)
+    if argc == 1:
+        print(f"Usage: {sys.argv[0]} <file>")
+        return
     try:
-        print("Initializing new storage unit: new_discovery.txt")
-        with open('new_discovery.txt', 'w') as my_file:
-            text: list = [
-                "[ENTRY 001] New quantum algorithm discovered",
-                "[ENTRY 002] Efficiency increased by 347%",
-                "[ENTRY 003] Archived by Data Archivist trainee"
-            ]
-            print("Storage unit created succesfully...\n")
-            print("Inscribing preservation data...")
-            for line in text:
-                my_file.write(line + "\n")
-                print(line)
-        print("\nData inscription complete. Storage unit sealed.")
-        print("Archive 'new_discovery.txt' ready for long-term preservation.")
+        print("=== CYBER ARCHIVES - DATA RECOVERY SYSTEM ===")
+        print(f"Accesing file: {sys.argv[1]}")
+        file: typing.IO = open(sys.argv[1], 'r')
+        file_list: list = [line.strip() for line in file]
+        print("---\n")
+        print(file.read())
+        print("\n---")
+        file.close()
+        print(f"File'{sys.argv[1]}' closed.")
+        print("\nTransform data:")
+        print("---\n")
+        for line in file_list:
+            print(line + "#")
+        print("\n---")
+        name: str = input("Enter new file name (or empty): ")
+        if not name:
+            print("Not saving data")
+            return
+        else:
+            print(f"Saving data to '{name}'")
+            file = open(name, 'w')
+            for line in file_list:
+                file.writelines(line + "#\n")
+            print(f"Data saved in file '{name}'.")
     except OSError as e:
-        print(f"ERROR: {e}")
+        print(f"Error opening file {sys.argv[1]}: {e}")
 
 
 if __name__ == "__main__":
-    print("=== CYBER ARCHIVES - PRESERVATION SYSTEM ===\n")
     ft_archive_creation()

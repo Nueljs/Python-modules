@@ -1,15 +1,24 @@
+import sys
+import typing
+
+
 def ft_ancient_text() -> None:
+    argc: int = len(sys.argv)
+    if argc == 1:
+        print(f"Usage: {sys.argv[0]} <file>")
+        return
     try:
-        print("Accesing Storage Vault: ancient_fragment.txt")
-        with open('ancient_fragment.txt', "r") as vault:
-            print("Connection established...\n")
-            for content in vault:
-                print(content, end="")
-        print("\nData recovery complete. Storage unit disconnected")
-    except FileNotFoundError:
-        print("Error: Storage vault not found. Run data generator first.")
+        print("=== CYBER ARCHIVES - DATA RECOVERY SYSTEM ===")
+        print(f"Accesing file: {sys.argv[1]}")
+        file: typing.IO = open(sys.argv[1], 'r')
+        print("---\n")
+        print(file.read())
+        print("\n---")
+        file.close()
+        print(f"File'{sys.argv[1]}' closed.")
+    except OSError as e:
+        print(f"Error opening file {sys.argv[1]}: {e}")
 
 
 if __name__ == "__main__":
-    print("=== CYBER ARCHIVES - DATA RECOVERY SYSTEM ===\n")
     ft_ancient_text()
