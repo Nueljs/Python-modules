@@ -10,8 +10,8 @@ def ft_command_quest() -> None:
     elif argc > 1:
         print(f"Argument received: {argc - 1}")
         for arg in sys.argv[1:]:
-            print(f"Argument {i + 1}: {arg}")
-
+            i += 1
+            print(f"Argument {i}: {arg}")
     print(f"Total arguments: {argc}")
 
 

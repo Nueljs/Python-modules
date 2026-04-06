@@ -35,11 +35,17 @@ class NumericProcessor(DataProcessor):
         return (False)
 
     def ingest(self, data: Any) -> None:
-        if self.validate(data):
-            if isinstance(data, list):
-                self._storage.append((len(self._storage), i) for i in data)
+        try:
+            if self.validate(data):
+                if isinstance(data, list):
+                    for i in data:
+                        self._storage.append((len(self._storage), str(i)))
+                else:
+                    self._storage.append((len(self._storage), str(data)))
             else:
-                self._storage.append((len(self._storage), data))
+                raise
+        except ValueError:
+            print("Improper numeric data")
 
 
 class TextProcessor(DataProcessor):

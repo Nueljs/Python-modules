@@ -2,24 +2,26 @@ import sys
 
 
 def ft_inventory_system() -> None:
-    argc = len(sys.argv)
+    num_items: int = 0
     inventory: dict = {}
     for arg in sys.argv[1:]:
         item: list = arg.split(":")
-        name: str = item[0]
-        if name in inventory:
-            print(f"Redundant item '{name}' - discarting")
         if len(item) != 2:
             print(f"Error - invalid parameter '{arg}'")
             continue
+        name: str = item[0]
+        if name in inventory:
+            print(f"Redundant item '{name}' - discarting")
+            continue
         try:
             value: int = int(item[1])
+            inventory[name] = value
+            num_items += 1
         except ValueError as e:
             print(f"Quantity error for '{name}': {e}")
-        inventory[name] = value
     print(f"Got inventory: {inventory}")
     print(f"Item list: {list(inventory.keys())}")
-    print(f"Total quantity of the {argc - 1} items: {sum(inventory.values())}")
+    print(f"Total quantity of the {num_items} items: {sum(inventory.values())}")
     for item in inventory:
         total_items: int = sum(inventory.values())
         percentage: float = (inventory[item]/total_items) * 100
@@ -40,7 +42,7 @@ def ft_inventory_system() -> None:
             max_val = current_value
     print(f"Item most abundant: {max_item} with quantity {max_val}")
     print(f"Item least abundant: {min_item} with quantity {min_val}")
-    inventory.update({"magic_item": 6})
+    inventory.update({"magic_item": 1})
     print(f"Updated inventory: {inventory}")
 
 
