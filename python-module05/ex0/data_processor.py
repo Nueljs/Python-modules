@@ -54,8 +54,8 @@ class TextProcessor(DataProcessor):
             return (True)
         elif isinstance(data, list):
             return all(isinstance(i, str) for i in data)
-        return False 
-    
+        return False
+
     def ingest(self, data: Any) -> None:
         if self.validate(data):
             if isinstance(data, list):
@@ -71,17 +71,57 @@ class LogProcessor(DataProcessor):
     def __init__(self):
         super().__init__()
 
+    def validate(self, data: Any) -> bool:
+        if isinstance(data, list):
+            bool_list: list = []
+            for obj in data:
+                if isinstance(obj, dict):
+                    keys: bool = all(isinstance(x, str) for x in obj.keys())
+                    values: bool = all(isinstance(y, str) for y in obj.values())
+                    bool_list.append(keys)
+                    bool_list.append(values)
+                else:
+                    return (False)
+            return all(bool_list)
+        elif isinstance(data, dict):
+            keys_ok: bool = all(isinstance(i, str) for i in data.keys())
+            values_ok: bool = all(isinstance(j, str) for j in data.values())
+            return (keys_ok and values_ok)
+        return (False)
+
+    def ingest(self, data: Any) -> None:
+        if self.validate(data):
+            if isinstance(data, list):
+                for dicti in data:
+                    keys_str: list = [i for i in dicti.keys()]
+                    values_str: list = [j for j in dicti.values()]
+                    for objec in keys_str and values_str:
+                        self._storage.append(objec)
+            else:
+                keys_str2: list = [x for x in dicti.keys()]
+                values_str2: list = [y for y in dicti.values()]
+                for objec2 in keys_str2 and values_str2:
+                    self._storage.append(objec2)
+        else:
+            raise ValueError("Improper log data")
+
 
 def data_processor() -> None:
     np: NumericProcessor = NumericProcessor()
     tp: TextProcessor = TextProcessor()
-    print(tp.validate(42))
-    print(tp.validate("adaf"))
-    print(tp.validate(["a", "b", 42]))
-    print(np.validate(31))
-    tp.ingest(["a", "b", "42"])
-    print(tp.output())
-    print(tp.output())
+    lp: LogProcessor = LogProcessor()
+    print(lp.validate({"hoa": "342", "afsdf": "1423"}))
+    print(lp.validate([
+        {"hoa": "342", "afsdf": "1423"},
+        {"hoa": "342", "afsdf": "1423"}]))
+    print(lp.validate([
+        {"hoa": 342, "afsdf": 1423},
+        {"hoa": "342", "afsdf": "543"}]))
+    print(lp.validate(["hoa", 342, "afsdf", 1423]))
+    lp.ingest([
+        {"hoa": "342", "afsdf": "1423"},
+        {"hoa": "342", "afsdf": "1423"}])
+    print(lp.output())
 
 
 if __name__ == "__main__":
