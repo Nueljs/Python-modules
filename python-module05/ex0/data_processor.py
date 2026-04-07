@@ -26,7 +26,7 @@ class NumericProcessor(DataProcessor):
         if data is True or data is False:
             return (False)
         elif isinstance(data, int) or isinstance(data, float):
-            return True
+            return (True)
         elif isinstance(data, list):
             for i in data:
                 if i is True or i is False:
@@ -35,22 +35,36 @@ class NumericProcessor(DataProcessor):
         return (False)
 
     def ingest(self, data: Any) -> None:
-        try:
-            if self.validate(data):
-                if isinstance(data, list):
-                    for i in data:
-                        self._storage.append((len(self._storage), str(i)))
-                else:
-                    self._storage.append((len(self._storage), str(data)))
+        if self.validate(data):
+            if isinstance(data, list):
+                for i in data:
+                    self._storage.append((len(self._storage), str(i)))
             else:
-                raise
-        except ValueError:
-            print("Improper numeric data")
+                self._storage.append((len(self._storage), str(data)))
+        else:
+            raise ValueError("Improper numeric data")
 
 
 class TextProcessor(DataProcessor):
     def __init__(self):
         super().__init__()
+
+    def validate(self, data: Any) -> bool:
+        if isinstance(data, str):
+            return (True)
+        elif isinstance(data, list):
+            return all(isinstance(i, str) for i in data)
+        return False 
+    
+    def ingest(self, data: Any) -> None:
+        if self.validate(data):
+            if isinstance(data, list):
+                for i in data:
+                    self._storage.append((len(self._storage), i))
+            else:
+                self._storage.append((len(self._storage), data))
+        else:
+            raise ValueError("Improper text data")
 
 
 class LogProcessor(DataProcessor):
@@ -60,10 +74,14 @@ class LogProcessor(DataProcessor):
 
 def data_processor() -> None:
     np: NumericProcessor = NumericProcessor()
+    tp: TextProcessor = TextProcessor()
+    print(tp.validate(42))
+    print(tp.validate("adaf"))
+    print(tp.validate(["a", "b", 42]))
     print(np.validate(31))
-    print(np.validate(True))
-    print(np.validate([1, 2, 3, 4]))
-    print(np.validate([1, False, 3, 4]))
+    tp.ingest(["a", "b", "42"])
+    print(tp.output())
+    print(tp.output())
 
 
 if __name__ == "__main__":
