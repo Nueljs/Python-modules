@@ -92,16 +92,12 @@ class LogProcessor(DataProcessor):
     def ingest(self, data: Any) -> None:
         if self.validate(data):
             if isinstance(data, list):
-                for dicti in data:
-                    keys_str: list = [i for i in dicti.keys()]
-                    values_str: list = [j for j in dicti.values()]
-                    for objec in keys_str and values_str:
-                        self._storage.append(objec)
+                for dic in data:
+                    result: str = dic["log_level"] + ": " + dic["log_message"]
+                    self._storage.append((len(self._storage), result))
             else:
-                keys_str2: list = [x for x in dicti.keys()]
-                values_str2: list = [y for y in dicti.values()]
-                for objec2 in keys_str2 and values_str2:
-                    self._storage.append(objec2)
+                result2: str = data["log_level"] + ": " + data["log_message"]
+                self._storage.append((len(self._storage), result2))
         else:
             raise ValueError("Improper log data")
 
@@ -110,19 +106,15 @@ def data_processor() -> None:
     np: NumericProcessor = NumericProcessor()
     tp: TextProcessor = TextProcessor()
     lp: LogProcessor = LogProcessor()
-    print(lp.validate({"hoa": "342", "afsdf": "1423"}))
-    print(lp.validate([
-        {"hoa": "342", "afsdf": "1423"},
-        {"hoa": "342", "afsdf": "1423"}]))
-    print(lp.validate([
-        {"hoa": 342, "afsdf": 1423},
-        {"hoa": "342", "afsdf": "543"}]))
-    print(lp.validate(["hoa", 342, "afsdf", 1423]))
-    lp.ingest([
-        {"hoa": "342", "afsdf": "1423"},
-        {"hoa": "342", "afsdf": "1423"}])
-    print(lp.output())
+    print("Testing NUmeric Processor...")
+    try:
+        print(f"Trying to validate input '42': {np.validate(42)}")
+        print(f"Trying to validate input 'Hello': {np.validate("Hello")}")
+
+    except ValueError as e:
+        print(f"Got exception: {e}")
 
 
 if __name__ == "__main__":
+    print("=== COde Nexus - DAta Processor ===\n")
     data_processor()
