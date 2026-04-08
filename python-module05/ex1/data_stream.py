@@ -2,6 +2,14 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 
+class DataStream:
+    def __init__(self):
+        self._processor = []
+
+    def register_processor(self, proc: )
+
+
+
 class DataProcessor(ABC):
     def __init__(self) -> None:
         self._storage: list = []
