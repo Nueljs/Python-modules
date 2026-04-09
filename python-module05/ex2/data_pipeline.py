@@ -149,14 +149,19 @@ class DataStream:
         pass
 
 
-class ExportPlugin(Protocol):
-    def __init__(self) -> None:
-        pass
-
+class ExportPlugin(typing.Protocol):
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        pass
+        ...
 
-    
+
+class CSVExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        ...
+
+
+class JSONExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        ...
 
 
 
