@@ -1,13 +1,6 @@
 from abc import ABC, abstractmethod
+import typing
 from typing import Any
-
-
-class DataStream:
-    def __init__(self):
-        self._processor = []
-
-    def register_processor(self, proc: )
-
 
 
 class DataProcessor(ABC):
@@ -108,6 +101,31 @@ class LogProcessor(DataProcessor):
                 self._storage.append((len(self._storage), result2))
         else:
             raise ValueError("Improper log data")
+
+
+class DataStream:
+    def __init__(self):
+        self._processor = []
+
+    def register_processor(self, proc: DataProcessor) -> None:
+        self._processor.append(proc)
+
+    def process_stream(self, stream: list[typing.Any]) -> None:
+        remaining: int = 0
+        processed: int = 0
+        for data in stream:
+            found: bool = False
+            for process in self._processor:
+                if process.validate(data):
+                    process.ingest(data)
+                    processed += 1
+                    found = True
+                    break
+            if not found:
+                print("DataStream error - Can't process elemnt in stream:"
+                      f" {data}")
+                remaining += 1
+
 
 
 def data_processor() -> None:
