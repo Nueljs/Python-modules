@@ -16,8 +16,11 @@ class DataProcessor(ABC):
     def ingest(self, data: Any) -> None:
         pass
 
-    def output(self) -> tuple[int, str]:
-        return (self._storage.pop(0))
+    def output(self, nb: int) -> list[tuple[int, str]]:
+        output: list = []
+        for _ in range(nb):
+            output.append(self._storage.pop(0))
+        return (output)
 
 
 class NumericProcessor(DataProcessor):
@@ -141,6 +144,20 @@ class DataStream:
                 print(f"{process._name}: total "
                       f"{process._count} items processed, remaining"
                       f" {len(process._storage)} on processor")
+
+    def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
+        pass
+
+
+class ExportPlugin(Protocol):
+    def __init__(self) -> None:
+        pass
+
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        pass
+
+    
+
 
 
 def data_stream() -> None:
