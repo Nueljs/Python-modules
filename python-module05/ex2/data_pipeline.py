@@ -7,6 +7,7 @@ class DataProcessor(ABC):
     def __init__(self) -> None:
         self._storage: list[tuple[int, str]] = []
         self._count: int = 0
+        self._name: str = ""
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
@@ -17,9 +18,8 @@ class DataProcessor(ABC):
         pass
 
     def output(self, nb: int) -> list[tuple[int, str]]:
-        output: list = []
-        for _ in range(nb):
-            output.append(self._storage.pop(0))
+        output: list = self._storage[:nb]
+        self._storage = self._storage[nb:]
         return (output)
 
 
@@ -116,9 +116,34 @@ class LogProcessor(DataProcessor):
             raise ValueError("Improper log data")
 
 
+class ExportPlugin(typing.Protocol):
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        ...
+
+
+class CSVExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        values: list = [value for _, value in data]
+        line = ",".join(values)
+        if not data:
+            return
+        print("CSV Output:")
+        print(line)
+
+
+class JSONExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        values: list = [f'"item_{key}": "{value}"' for key, value in data]
+        json_str: str = "{" + ", ".join(values) + "}"
+        if not data:
+            return
+        print("JSON Output:")
+        print(json_str)
+
+
 class DataStream:
-    def __init__(self):
-        self._processors = []
+    def __init__(self) -> None:
+        self._processors: list[DataProcessor] = []
 
     def register_processor(self, proc: DataProcessor) -> None:
         self._processors.append(proc)
@@ -136,7 +161,7 @@ class DataStream:
                       f" {data}")
 
     def print_procesors_stats(self) -> None:
-        print("=== DataStream statistics ==")
+        print("== DataStream statistics ==")
         if not self._processors:
             print("No processor found, no data\n")
         else:
@@ -146,68 +171,63 @@ class DataStream:
                       f" {len(process._storage)} on processor")
 
     def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
-        pass
+        for processor in self._processors:
+            plugin.process_output(processor.output(nb))
 
 
-class ExportPlugin(typing.Protocol):
-    def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
-
-
-class CSVExportPlugin:
-    def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
-
-
-class JSONExportPlugin:
-    def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
-
-
-
-def data_stream() -> None:
+def data_pipeline() -> None:
     np: NumericProcessor = NumericProcessor()
     tp: TextProcessor = TextProcessor()
     lp: LogProcessor = LogProcessor()
     ds: DataStream = DataStream()
-    data: list = [
+    jsonp: JSONExportPlugin = JSONExportPlugin()
+    csvp: CSVExportPlugin = CSVExportPlugin()
+    data1: list = [
         "Hello world", [3.14, -1, 2.71],
         [{"log_level": "WARNING",
          "log_message": "Telnet access! Use ssh instead"},
          {'log_level': 'INFO', 'log_message': 'User wil is connected'}],
         42, ['Hi', 'five']
         ]
+    data2: list = [
+        21, ['I love AI', 'LLMs are wonderful', 'Stay healthy'],
+        [{'log_level': 'ERROR', 'log_message': '500 server crash'},
+         {'log_level': 'NOTICE', 'log_message': 'Certificate expires in'
+          ' 10 days'}], [32, 42, 64, 84, 128, 168], 'World hello']
 
-    print("Initialize Data Stream...")
+    print("Initialize Data Stream...\n")
     ds.print_procesors_stats()
 
-    print("Registering Numeric Processor\n")
+    print("Registering Processors\n")
     ds.register_processor(np)
-
-    print(f"Send first batch of data on stream: {data}")
-    ds.process_stream(data)
-    ds.print_procesors_stats()
-    print("")
-
-    print("Registering other data processors")
     ds.register_processor(tp)
     ds.register_processor(lp)
-    print("Send the same batch again")
-    ds.process_stream(data)
+
+    print(f"Send first batch of data on stream: {data1}\n")
+    ds.process_stream(data1)
     ds.print_procesors_stats()
     print("")
 
-    print("Consume somo elements from the data proccessors: Numeric 3, Text 2,"
-          " Log 1")
-    np.output()
-    np.output()
-    np.output()
-    tp.output()
-    tp.output()
-    lp.output()
+    print("Send 3 processed data from each processor to a CSV plugin:")
+    ds.output_pipeline(3, csvp)
+    print("")
+
+    ds.print_procesors_stats()
+
+    print("")
+    print(f"Send another batch of data: {data2}\n")
+    ds.process_stream(data2)
+
+    ds.print_procesors_stats()
+    print("")
+
+    print("Send 5 processed data from each processor to a JSON plugin:")
+    ds.output_pipeline(5, jsonp)
+
+    print("")
     ds.print_procesors_stats()
 
 
 if __name__ == "__main__":
-    print("=== Code Nexus - Data Stream ===\n")
-    data_stream()
+    print("=== Code Nexus - Data Pipeline ===\n")
+    data_pipeline()
