@@ -24,21 +24,21 @@ class DataProcessor(ABC):
 
 
 class NumericProcessor(DataProcessor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._name = "Numeric Processor"
 
     def validate(self, data: Any) -> bool:
         if data is True or data is False:
-            return (False)
+            return False
         elif isinstance(data, int) or isinstance(data, float):
-            return (True)
+            return True
         elif isinstance(data, list):
             for i in data:
                 if i is True or i is False:
-                    return (False)
+                    return False
             return (all(isinstance(i, (int, float)) for i in data))
-        return (False)
+        return False
 
     def ingest(self, data: Any) -> None:
         if self.validate(data):
@@ -54,13 +54,13 @@ class NumericProcessor(DataProcessor):
 
 
 class TextProcessor(DataProcessor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._name = "Text Processor"
 
     def validate(self, data: Any) -> bool:
         if isinstance(data, str):
-            return (True)
+            return True
         elif isinstance(data, list):
             return all(isinstance(i, str) for i in data)
         return False
@@ -79,7 +79,7 @@ class TextProcessor(DataProcessor):
 
 
 class LogProcessor(DataProcessor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._name = "Log Processor"
 
@@ -93,13 +93,13 @@ class LogProcessor(DataProcessor):
                     bool_list.append(keys)
                     bool_list.append(values)
                 else:
-                    return (False)
+                    return False
             return all(bool_list)
         elif isinstance(data, dict):
             keys_ok: bool = all(isinstance(i, str) for i in data.keys())
             values_ok: bool = all(isinstance(j, str) for j in data.values())
             return (keys_ok and values_ok)
-        return (False)
+        return False
 
     def ingest(self, data: Any) -> None:
         if self.validate(data):

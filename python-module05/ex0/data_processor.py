@@ -77,9 +77,9 @@ class LogProcessor(DataProcessor):
             for obj in data:
                 if isinstance(obj, dict):
                     keys: bool = all(isinstance(x, str) for x in obj.keys())
-                    values: bool = all(isinstance(y, str) for y in obj.values())
+                    val: bool = all(isinstance(y, str) for y in obj.values())
                     bool_list.append(keys)
-                    bool_list.append(values)
+                    bool_list.append(val)
                 else:
                     return (False)
             return all(bool_list)

@@ -21,7 +21,8 @@ def ft_inventory_system() -> None:
             print(f"Quantity error for '{name}': {e}")
     print(f"Got inventory: {inventory}")
     print(f"Item list: {list(inventory.keys())}")
-    print(f"Total quantity of the {num_items} items: {sum(inventory.values())}")
+    print(f"Total quantity of the {num_items} items:"
+          f" {sum(inventory.values())}")
     for item in inventory:
         total_items: int = sum(inventory.values())
         percentage: float = (inventory[item]/total_items) * 100
