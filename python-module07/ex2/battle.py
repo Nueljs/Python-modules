@@ -23,7 +23,7 @@ class NormalStrategy(BattleStrategy):
 
 
 class AggressiveStrategy(BattleStrategy):
-    def is_valid(self, creature: Creature) -> bool:    
+    def is_valid(self, creature: Creature) -> bool:
         return isinstance(creature, TransformCapability)
 
     def act(self, creature: Creature) -> None:
