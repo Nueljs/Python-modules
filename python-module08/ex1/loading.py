@@ -19,14 +19,13 @@ if __name__ == "__main__":
 
     print("Checking dependencies:")
 
-    dependencies: list[str] = ["pandas", "numpy", "requests", "matplotlib"]
+    dependencies: list[str] = ["pandas", "numpy", "matplotlib"]
 
     missing: bool = False
 
-    description: dict = {
+    description: dict[str, str] = {
         "pandas": "Data manipulation ready",
         "numpy": "Numerical computation ready",
-        "requests": "Network access ready",
         "matplotlib": "Visualization ready"
         }
     for dependency in dependencies:

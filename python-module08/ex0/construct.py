@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
         print(f"Current Python: {sys.executable}")
         print(f"Virtual Environment: {os.path.basename(sys.prefix)}")
-        print(f"Enviroment Path: {sys.prefix}")
+        print(f"Environment Path: {sys.prefix}")
 
         path: list[str] = site.getsitepackages()
         print("Package installation path:")
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         print()
 
         print(f"Current Python: {sys.executable}")
-        print("Virtual Enviroment: None detected")
+        print("Virtual Environment: None detected")
         print()
         print("WARNING: You're in the global environment!")
         print("The machines can see everything you install.")

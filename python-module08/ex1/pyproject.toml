@@ -9,7 +9,6 @@ python = ">=3.11"
 pandas = ">=2.1.0"
 numpy = ">=1.25.0"
 matplotlib = ">=3.7.2"
-requests = ">=2.31.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = ">=6.0.0"

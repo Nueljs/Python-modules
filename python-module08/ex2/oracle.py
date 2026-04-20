@@ -13,7 +13,9 @@ class Config:
 
 
 def load_environment() -> None:
-    dotenv_path: str = os.path.join(os.path.dirname(__file__), ".env.example")
+    dotenv_path: str = os.path.join(os.path.dirname(__file__), ".env")
+    if not os.path.exists(dotenv_path):
+        print("WARN: .env not found, using environment variables only")
     load_dotenv(dotenv_path)
 
 
@@ -23,24 +25,19 @@ def get_env_variable(key: str, default: str | None = None) -> str | None:
 
 def build_config() -> Config:
     config: Config = Config()
-    config.mode = get_env_variable("MATRIX_MODE")
+    config.mode = get_env_variable("MATRIX_MODE", "development")
     config.database_url = get_env_variable("DATABASE_URL")
     config.api_key = get_env_variable("API_KEY")
-    config.log_level = get_env_variable("LOG_LEVEL")
+    config.log_level = get_env_variable("LOG_LEVEL", "DEBUG")
     config.zion_endpoint = get_env_variable("ZION_ENDPOINT")
 
     return config
 
 
 def validate_config(config: Config) -> None:
-    if config.mode is None:
-        print("ERROR: MATRIX_MODE is required")
+    if config.mode == "production" and config.api_key is None:
+        print("ERROR: API_KEY is required in production")
         sys.exit(1)
-
-    if config.mode == "production":
-        if config.api_key is None:
-            print("ERROR: API_KEY is required in production")
-            sys.exit(1)
 
 
 def display_status(config: Config) -> None:
@@ -64,9 +61,17 @@ def display_status(config: Config) -> None:
         print("Zion Network: Offline")
 
 
-def security_checks(config: Config) -> None:
-    if config.api_key:
-        print("[OK] API key loaded")
+def security_checks() -> None:
+    env_file: str = os.path.join(os.path.dirname(__file__), ".env")
+    env_example: str = os.path.join(os.path.dirname(__file__), ".env.example")
+
+    print("[OK] No hardcoded secrets detected")
+    if os.path.exists(env_file):
+        print("[OK] .env file properly configured")
+    elif os.path.exists(env_example):
+        print("[OK] .env.example present for reference")
+
+    print("[OK] Production overrides available")
 
 
 if __name__ == "__main__":
@@ -76,8 +81,6 @@ if __name__ == "__main__":
     display_status(config)
     print()
     print("Environment security check:")
-    print("[OK] No hardcoded secrets detected")
-    print("[OK] .env file properly configured")
-    print("[OK] Production overrides available")
+    security_checks()
     print()
     print("The Oracle sees all configurations.")
