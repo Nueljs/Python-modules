@@ -22,7 +22,8 @@ def main() -> None:
         crew_size=6,
         power_level=85.5,
         oxygen_level=92.3,
-        last_maintenance="2024-01-15T10:30:00"
+        last_maintenance="2024-01-15T10:30:00",
+        notes=None
     )
 
     print("Valid station created:")
@@ -46,7 +47,8 @@ def main() -> None:
             crew_size=99,
             power_level=50.0,
             oxygen_level=80.0,
-            last_maintenance='2024-01-15T10:30:00'
+            last_maintenance='2024-01-15T10:30:00',
+            notes=None
         )
     except ValidationError as e:
         for error in e.errors():

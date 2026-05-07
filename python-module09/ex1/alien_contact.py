@@ -72,6 +72,7 @@ def main() -> None:
             signal_strength=5.0,
             duration_minutes=10,
             witness_count=1,
+            message_received="Greetings from Zeta Reticuli"
         )
     except ValidationError as e:
         for error in e.errors():
